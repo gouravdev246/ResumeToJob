@@ -71,18 +71,37 @@ const pdf_to_json = async (req, res) => {
 }
 
 
+const getPdfInfo = async (req  , res) =>{
+        const userId = req.user?._id;
+        
+        // Check if the user already has parsed resume data
+        
+            const existingPdfData = await PdfData.findOne({ author: userId });
+            if (existingPdfData) {
+                return res.status(200).json({
+                    message: "Resume data already exists and fetched successfully",
+                    data: existingPdfData
+                });
+            }
+            return res.status(200).json({
+                message: "Upload PDF",
+                   
+            });
+            
+       
+
+}
+
+
 const deleteExsistingData = async (req , res) =>{
     try{
         const userId = req.user?._id; 
         const pdfdata = await PdfData.findOneAndDelete({author : userId})
         return res.status(200).json({message : "PDF deleted!!"})
 
-
-        
-
     }catch(err){
         console.log("Error in Delete " , err)
     }
 
 }
-export { pdf_to_json , deleteExsistingData};
+export { pdf_to_json , deleteExsistingData , getPdfInfo};

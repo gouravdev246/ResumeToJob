@@ -17,4 +17,18 @@ const storage = multer.diskStorage({
     }
 });
 
-export const upload = multer({ storage: storage });
+const fileFilter = (req, file, cb) => {
+    // Check both mime type and file extension
+    const isPdf = file.mimetype === 'application/pdf' && path.extname(file.originalname).toLowerCase() === '.pdf';
+    
+    if (isPdf) {
+        cb(null, true);
+    } else {
+        cb(new Error('Only PDF files are allowed!'), false);
+    }
+};
+
+export const upload = multer({ 
+    storage: storage,
+    fileFilter: fileFilter
+});
