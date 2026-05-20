@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "@/config";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { User, Mail, Lock, ArrowRight, Sparkles, AlertCircle, Eye, EyeOff } from "lucide-react";
@@ -21,13 +22,13 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const register = await axios.post("/api/auth/register", {
+      const register = await axios.post(`${BASE_URL}/api/auth/register`, {
         name: name,
         email: email,
         password: password,
       });
 
-      if (register.status === 200) {
+      if (register.status === 200 || register.status === 201) {
         setName("");
         setEmail("");
         setPassword("");

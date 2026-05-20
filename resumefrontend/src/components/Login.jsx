@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "@/config";
 import useProfileStore from "../store/store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -23,7 +24,7 @@ export default function Login() {
 
     try {
       const login = await axios.post(
-        "/api/auth/login",
+        `${BASE_URL}/api/auth/login`,
         {
           email: email,
           password: password,

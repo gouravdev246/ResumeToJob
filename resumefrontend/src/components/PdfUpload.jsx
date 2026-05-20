@@ -1,6 +1,7 @@
 'use client'
 import axios from 'axios';
 import React, { useState, useRef } from 'react';
+import { BASE_URL } from '@/config';
 
 export default function PdfUpload() {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -26,7 +27,7 @@ export default function PdfUpload() {
         formData.append('resume', selectedFile);
 
         try {
-            const resumeData = await axios.post('http://localhost:5001/api/pdf/getinfo', formData, {
+            const resumeData = await axios.post(`${BASE_URL}/api/pdf/getinfo`, formData, {
                 withCredentials: true,
                 headers: {
                     'Content-Type': 'multipart/form-data'

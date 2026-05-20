@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import axios from "axios";
+import { BASE_URL } from "@/config";
 import useProfileStore from "../store/store";
 import { Check, Sparkles, ShieldCheck, Zap, Loader2 } from "lucide-react";
 
@@ -35,7 +36,7 @@ export default function Payment() {
     try {
       // 2. Create Order on Backend
       const { data: order } = await axios.post(
-        "http://localhost:5001/api/payment/createOrder",
+        `${BASE_URL}/api/payment/createOrder`,
         { premiumtype },
         { withCredentials: true }
       );
@@ -58,7 +59,7 @@ export default function Payment() {
           try {
             // 4. Verify Payment on Backend
             const verifyRes = await axios.post(
-              "http://localhost:5001/api/payment/verifyPayment",
+              `${BASE_URL}/api/payment/verifyPayment`,
               {
                 order_id: response.razorpay_order_id,
                 payment_id: response.razorpay_payment_id,

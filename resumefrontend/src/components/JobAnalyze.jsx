@@ -1,6 +1,7 @@
 'use client'
 
 import axios from 'axios'
+import { BASE_URL } from '@/config'
 import React, { useState, useEffect } from 'react'
 import useProfileStore from '../store/store'
 import { 
@@ -16,7 +17,7 @@ export default function JobAnalyze() {
     const FindJobs = async () => {
         try {
             setLoading(true)
-            const jobdatas = await axios.get('http://localhost:5001/api/job', {
+            const jobdatas = await axios.get(`${BASE_URL}/api/job`, {
                 withCredentials: true
             })
             setjobs(jobdatas.data?.newjob?.jobdata || jobdatas.data?.jobs || [])
@@ -30,7 +31,7 @@ export default function JobAnalyze() {
     useEffect(() => {
         async function getrank() {
             try {
-                const jobdata = await axios.get('http://localhost:5001/api/jobrank', {
+                const jobdata = await axios.get(`${BASE_URL}/api/jobrank`, {
                     withCredentials: true 
                 })
                 if(jobdata.data?.jobs) {

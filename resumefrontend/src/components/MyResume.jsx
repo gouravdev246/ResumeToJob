@@ -1,6 +1,7 @@
 'use client'
 import { useState , useEffect } from 'react';
 import axios from 'axios';
+import { BASE_URL } from '@/config';
 import { Mail, Phone, Briefcase, GraduationCap, Code, Award, ExternalLink, Loader2, Share2, Check } from 'lucide-react';
 
 export default function MyResume({ id }) {
@@ -12,7 +13,7 @@ export default function MyResume({ id }) {
     useEffect(() => {
         async function getResumeData() {
             try {
-                const endpoint = id ? `/api/share/resume/${id}` : "/api/pdf/getinfo";
+                const endpoint = id ? `${BASE_URL}/api/share/resume/${id}` : `${BASE_URL}/api/pdf/getinfo`;
                 const response = await axios.get(endpoint, {
                     withCredentials: true,
                 });

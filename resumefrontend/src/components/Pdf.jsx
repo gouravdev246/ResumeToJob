@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { BASE_URL } from '@/config'
 import { 
   UploadCloud, FileText, CheckCircle2, TrendingUp, 
   Eye, Bookmark, ArrowRight, Loader2, Briefcase
@@ -15,7 +16,7 @@ export default function Pdf() {
     useEffect(() => {
         async function getData() {
             try {
-                const exsistData = await axios.get('http://localhost:5001/api/pdf/getinfo', {
+                const exsistData = await axios.get(`${BASE_URL}/api/pdf/getinfo`, {
                     withCredentials: true
                 })
                 if(exsistData.data?.data?.pdfdata) {
@@ -43,7 +44,7 @@ export default function Pdf() {
         formData.append('resume', selectedFile)
 
         try {
-            const resumeData = await axios.post('http://localhost:5001/api/pdf/uploadpdf', formData, {
+            const resumeData = await axios.post(`${BASE_URL}/api/pdf/uploadpdf`, formData, {
                 withCredentials: true
             })
             if(resumeData.data?.pdfdata) {
@@ -56,7 +57,7 @@ export default function Pdf() {
         }
     }
     const handleDelete = async ()=>{
-        const deleteData = await axios.delete('/api/pdf/delete',{
+        const deleteData = await axios.delete(`${BASE_URL}/api/pdf/delete`,{
             withCredentials : true 
         })
         
