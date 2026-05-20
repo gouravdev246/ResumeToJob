@@ -76,7 +76,7 @@ const getPdfInfo = async (req  , res) =>{
         
         // Check if the user already has parsed resume data
         
-            const existingPdfData = await PdfData.findOne({ author: userId });
+            const existingPdfData = await PdfData.findOne({ author: userId } , {"pdfdata.resume_embedding" : 0});
             if (existingPdfData) {
                 return res.status(200).json({
                     message: "Resume data already exists and fetched successfully",
@@ -85,6 +85,7 @@ const getPdfInfo = async (req  , res) =>{
             }
             return res.status(200).json({
                 message: "Upload PDF",
+                data: existingPdfData
                    
             });
             

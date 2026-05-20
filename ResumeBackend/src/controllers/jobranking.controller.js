@@ -8,6 +8,8 @@ import { JobData } from "../models/jobs.model.js";
 import { calculateCosineSimilarity } from "../services/cosine-similarity.js";
 import { generateEmbedding } from "../services/convert-embeddings.js";
 
+
+
 const jobRanking = async (req , res) =>{
     try{
         const userId = req.user?._id;
@@ -16,12 +18,10 @@ const jobRanking = async (req , res) =>{
         if (!userData || !userData.pdfdata || !userData.pdfdata.preferences_role || !userData.pdfdata.preferences_role.length) {
             return res.status(400).json({ message: "User resume data or preferred role not found." });
         }
-
         const role = userData.pdfdata.preferences_role[0]?.role;
         if (!role) {
             return res.status(400).json({ message: "Preferred role is missing in resume data." });
         }
-
         const scrapData = await internshala(role);
 
         if (!scrapData || scrapData.length === 0) {
@@ -58,8 +58,6 @@ const jobRanking = async (req , res) =>{
     }catch(err){
         console.log("Error in job Ranking " , err) ;
     }
-
-
 }
 
 

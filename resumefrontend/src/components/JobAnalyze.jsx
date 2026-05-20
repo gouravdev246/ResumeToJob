@@ -10,23 +10,27 @@ import {
 
 export default function JobAnalyze() {
     const [jobs, setjobs] = useState([])
+    const [loading, setLoading] = useState(false)
     const user = useProfileStore((state) => state.user)
 
     const FindJobs = async () => {
         try {
-            const jobdatas = await axios.get('http://localhost:5001/api/jobs', {
+            setLoading(true)
+            const jobdatas = await axios.get('http://localhost:5001/api/job', {
                 withCredentials: true
             })
-            setjobs(jobdatas.data?.data?.jobs || jobdatas.data?.jobs || [])
+            setjobs(jobdatas.data?.newjob?.jobdata || jobdatas.data?.jobs || [])
         } catch(e) {
             console.error(e)
+        } finally {
+            setLoading(false)
         }
     } 
 
     useEffect(() => {
         async function getrank() {
             try {
-                const jobdata = await axios.get('/api/jobrank', {
+                const jobdata = await axios.get('http://localhost:5001/api/jobrank', {
                     withCredentials: true 
                 })
                 if(jobdata.data?.jobs) {
@@ -42,62 +46,18 @@ export default function JobAnalyze() {
     return (
         <div className="flex flex-col gap-8 w-full">
             {/* Top Stat Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {/* Score */}
-                <div className="bg-white border border-slate-100 rounded-3xl p-5 flex items-start gap-4 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="w-12 h-12 rounded-2xl bg-[#F2F0FF] text-[#5B4EEF] flex items-center justify-center flex-shrink-0">
-                        <Target className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <h3 className="text-xs font-semibold text-slate-500 mb-1">Match Score</h3>
-                        <div className="text-2xl font-bold text-[#5B4EEF]">85%</div>
-                        <p className="text-[11px] text-emerald-500 font-bold mt-1">Great Match! 🎉</p>
-                    </div>
-                </div>
-                {/* Jobs Found */}
-                <div className="bg-white border border-slate-100 rounded-3xl p-5 flex items-start gap-4 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center flex-shrink-0">
-                        <Briefcase className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <h3 className="text-xs font-semibold text-slate-500 mb-1">Jobs Found</h3>
-                        <div className="text-2xl font-bold text-slate-900">{jobs?.length > 0 ? jobs.length : '128'}</div>
-                        <p className="text-[11px] text-emerald-500 font-bold mt-1">+18 new today</p>
-                    </div>
-                </div>
-                {/* Applications */}
-                <div className="bg-white border border-slate-100 rounded-3xl p-5 flex items-start gap-4 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0">
-                        <Bookmark className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <h3 className="text-xs font-semibold text-slate-500 mb-1">Applications</h3>
-                        <div className="text-2xl font-bold text-slate-900">24</div>
-                        <p className="text-[11px] text-amber-500 font-bold mt-1">6 in progress</p>
-                    </div>
-                </div>
-                {/* Profile Views */}
-                <div className="bg-white border border-slate-100 rounded-3xl p-5 flex items-start gap-4 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0">
-                        <Eye className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <h3 className="text-xs font-semibold text-slate-500 mb-1">Profile Views</h3>
-                        <div className="text-2xl font-bold text-slate-900">312</div>
-                        <p className="text-[11px] text-emerald-500 font-bold mt-1">+45 this week</p>
-                    </div>
-                </div>
-            </div>
+
 
             {/* Matched Jobs Section */}
             <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold text-slate-900">Top Matched Jobs</h2>
+                    <h2 className="text-lg font-bold text-slate-900">Top Matched Jobs {jobs.length > 0 ? `(${jobs.length})` : ''}</h2>
                     <button 
                         onClick={FindJobs}
-                        className="text-sm font-semibold text-[#5B4EEF] hover:text-indigo-700 flex items-center gap-1"
+                        disabled={loading}
+                        className={`text-sm font-semibold flex items-center gap-1 ${loading ? 'text-slate-400' : 'text-[#5B4EEF] hover:text-indigo-700'}`}
                     >
-                        View all matches <ArrowRight className="w-4 h-4" />
+                        {loading ? 'Finding Jobs...' : 'Find New Matches'} <ArrowRight className="w-4 h-4" />
                     </button>
                 </div>
 
@@ -107,8 +67,8 @@ export default function JobAnalyze() {
                             <Briefcase className="w-8 h-8" />
                         </div>
                         <p className="text-slate-500 font-medium mb-4">No jobs found yet.</p>
-                        <button onClick={FindJobs} className="bg-[#5B4EEF] text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors">
-                            Find Jobs Now
+                        <button onClick={FindJobs} disabled={loading} className={`text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors ${loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-[#5B4EEF] hover:bg-indigo-700'}`}>
+                            {loading ? 'Analyzing your profile and finding jobs...' : 'Find Jobs Now'}
                         </button>
                     </div>
                 ) : (
@@ -145,16 +105,17 @@ export default function JobAnalyze() {
                                             <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 sm:gap-1 flex-shrink-0 w-full sm:w-auto justify-between sm:justify-start">
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-xs font-bold text-emerald-500">
-                                                        {Math.floor(Math.random() * (98 - 80 + 1) + 80)}% Match
+                                                        {/* {Math.floor(Math.random() * (98 - 80 + 1) + 80)}% Match */}
+                                                        {Math.ceil(job.rank_score * 100)} % Match 
                                                     </span>
                                                     <svg className="w-5 h-5 text-emerald-500" viewBox="0 0 36 36">
                                                         <path className="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="4"/>
-                                                        <path className="text-emerald-500" strokeDasharray="85, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="4"/>
+                                                        <path className="text-emerald-500" strokeDasharray={ (Math.ceil(job.rank_score * 100) )} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="4"/>
                                                     </svg>
                                                 </div>
-                                                <button className="text-slate-300 hover:text-slate-600 transition-colors">
+                                                {/* <button className="text-slate-300 hover:text-slate-600 transition-colors">
                                                     <Bookmark className="w-5 h-5" />
-                                                </button>
+                                                </button> */}
                                             </div>
                                         </div>
 
@@ -169,7 +130,7 @@ export default function JobAnalyze() {
                                             </div>
                                             <div className="flex items-center gap-4 text-xs text-slate-500 font-semibold whitespace-nowrap">
                                                 <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> {job.remote ? "Remote" : "On Site"}</span>
-                                                <span>{job.salary ? `$ ${job.salary.min} - ${job.salary.max}` : '$ 20,000 /month'}</span>
+                                                <span>{job.salary ? `₹ ${job.salary.min} - ${job.salary.max}` : '₹ 20,000 /month'}</span>
                                             </div>
                                         </div>
                                     </div>

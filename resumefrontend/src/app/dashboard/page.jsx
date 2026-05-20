@@ -6,6 +6,7 @@ import JobAnalyze from '../../components/JobAnalyze'
 import useProfileStore from '../../store/store'
 import Logout from '../../components/Logout'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { 
   LayoutDashboard, FileText, Briefcase, Bookmark, Send, 
   BarChart2, FileUp, Bell, Settings, HelpCircle, 
@@ -15,11 +16,14 @@ import {
 export default function DashboardPage() {
   const router = useRouter()
   const user = useProfileStore((state) => state.user)
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      setSidebarOpen(true)
+    }
   }, [])
 
   if (!mounted) return null
@@ -29,7 +33,7 @@ export default function DashboardPage() {
   const currentUser = user?.name ? user : localData
   
   if (!currentUser?.name && !currentUser?.email) {
-    router.push('/login')
+    router.push('/')
     return null
   }
 
@@ -37,10 +41,10 @@ export default function DashboardPage() {
     <div className="flex h-screen bg-[#F8F9FE] font-sans text-slate-900 overflow-hidden">
       
       {/* Mobile sidebar backdrop */}
-      {!sidebarOpen && (
+      {sidebarOpen && (
         <div 
           className="fixed inset-0 bg-slate-900/50 z-20 lg:hidden"
-          onClick={() => setSidebarOpen(true)}
+          onClick={() => setSidebarOpen(false)}
         />
       )}
 
@@ -65,25 +69,25 @@ export default function DashboardPage() {
 
         <div className="flex-1 overflow-y-auto py-4 px-4 scrollbar-hide">
           <nav className="flex flex-col gap-1">
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-[#F2F0FF] text-[#5B4EEF] text-sm font-semibold transition-colors">
+            <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-[#F2F0FF] text-[#5B4EEF] text-sm font-semibold transition-colors">
               <LayoutDashboard className="w-5 h-5" /> Dashboard
-            </a>
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
+            </Link>
+            <Link href="myresume" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
               <FileText className="w-5 h-5" /> My Resume
-            </a>
+            </Link>
             <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
               <Briefcase className="w-5 h-5" /> Matched Jobs
             </a>
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
+            {/* <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
               <Bookmark className="w-5 h-5" /> Saved Jobs
             </a>
             <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
               <Send className="w-5 h-5" /> Applications
-            </a>
+            </a> */}
             
             <div className="my-2 border-t border-slate-100" />
             
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
+            {/* <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
               <BarChart2 className="w-5 h-5" /> Skill Analysis
             </a>
             <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
@@ -94,34 +98,44 @@ export default function DashboardPage() {
             </a>
             <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
               <Bell className="w-5 h-5" /> Job Alerts
-            </a>
+            </a> */}
 
             <div className="my-2 border-t border-slate-100" />
 
-            <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
+            {/* <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
               <Settings className="w-5 h-5" /> Settings
             </a>
             <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-500 hover:bg-slate-50 text-sm font-medium transition-colors">
               <HelpCircle className="w-5 h-5" /> Help & Support
-            </a>
+            </a> */}
           </nav>
         </div>
 
         <div className="p-4">
           <div className="bg-[#F8F9FE] border border-slate-100 rounded-2xl p-4 mb-4">
-            <div className="flex items-center gap-2 mb-2 text-sm font-bold text-slate-800">
-              <Crown className="w-4 h-4 text-amber-500 fill-amber-500" /> Upgrade to Pro
-            </div>
-            <p className="text-xs text-slate-500 mb-3 font-medium">Unlock unlimited matches, AI resume review and more.</p>
-            <button className="w-full bg-[#5B4EEF] text-white py-2 rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-colors shadow-sm shadow-indigo-200">
-              Upgrade Now
-            </button>
+            { currentUser?.acctype === "pro" || currentUser?.acctype === "pro-max" ? (
+              <div className="flex items-center gap-2 text-sm font-bold text-slate-800">
+                <Crown className="w-4 h-4 text-amber-500 fill-amber-500" /> Pro Member
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-2 text-sm font-bold text-slate-800"> 
+                  <Crown className="w-4 h-4 text-amber-500 fill-amber-500" /> Upgrade to Pro
+                </div>
+                <p className="text-xs text-slate-500 mb-3 font-medium">Unlock unlimited matches, AI resume review and more.</p>
+                <button  className="w-full bg-[#5B4EEF] text-white py-2 rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-colors shadow-sm shadow-indigo-200">
+                  <Link href="/premium">
+                  Upgrade Now
+                  </Link>
+                </button>
+              </>
+            )}
           </div>
 
           <div className="flex items-center gap-3 px-2 py-2 cursor-pointer hover:bg-slate-50 rounded-xl transition-colors">
             <img src={`https://ui-avatars.com/api/?name=${currentUser?.name || 'User'}&background=random`} alt="Profile" className="w-10 h-10 rounded-full" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-slate-900 truncate">{currentUser?.name || 'User'}</p>
+              <p className="text-sm font-bold text-slate-900 truncate">{currentUser?.name || 'User'} </p>
               <p className="text-xs text-slate-500 font-medium truncate">{currentUser?.email || 'user@example.com'}</p>
             </div>
             <ChevronDown className="w-4 h-4 text-slate-400" />

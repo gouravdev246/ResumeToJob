@@ -55,6 +55,12 @@ export default function Pdf() {
             setIsUploading(false)
         }
     }
+    const handleDelete = async ()=>{
+        const deleteData = await axios.delete('/api/pdf/delete',{
+            withCredentials : true 
+        })
+        
+    }
 
     return (
         <div className="flex flex-col gap-6">
@@ -156,78 +162,15 @@ export default function Pdf() {
                         )}
                     </div>
 
-                    <button className="w-full bg-[#F2F0FF] text-[#5B4EEF] py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2">
-                        <TrendingUp className="w-4 h-4" /> View Skill Analysis
-                    </button>
+                    <div>
+                        <button className='border-2 border-violet-500 rounded-xl p-2 text-violet-900' onClick={handleDelete}>Upload New One</button>
+                    </div>
+
+                   
                 </div>
             )}
 
-            {/* Recent Activity Section */}
-            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm">
-                <h2 className="text-base font-bold text-slate-900 mb-6">Recent Activity</h2>
-                
-                <div className="flex flex-col gap-6 relative before:absolute before:inset-y-0 before:left-4 before:w-[2px] before:bg-slate-50">
-                    
-                    <div className="flex items-start gap-4 relative z-10">
-                        <div className="w-8 h-8 rounded-full bg-emerald-50 border-4 border-white flex items-center justify-center text-emerald-500 flex-shrink-0">
-                            <CheckCircle2 className="w-4 h-4" />
-                        </div>
-                        <div className="flex-1 mt-1">
-                            <div className="flex justify-between">
-                                <h4 className="text-xs font-bold text-slate-900">Your resume was analyzed</h4>
-                                <span className="text-[10px] font-medium text-slate-400">2h ago</span>
-                            </div>
-                            <p className="text-[10px] text-slate-500 mt-0.5 font-medium">We found {PdfData?.skills?.length || '28'} skills in your resume</p>
-                        </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-4 relative z-10">
-                        <div className="w-8 h-8 rounded-full bg-indigo-50 border-4 border-white flex items-center justify-center text-[#5B4EEF] flex-shrink-0">
-                            <Briefcase className="w-4 h-4" />
-                        </div>
-                        <div className="flex-1 mt-1">
-                            <div className="flex justify-between">
-                                <h4 className="text-xs font-bold text-slate-900">New job matches found</h4>
-                                <span className="text-[10px] font-medium text-slate-400">5h ago</span>
-                            </div>
-                            <p className="text-[10px] text-slate-500 mt-0.5 font-medium">18 new jobs match your profile</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start gap-4 relative z-10">
-                        <div className="w-8 h-8 rounded-full bg-blue-50 border-4 border-white flex items-center justify-center text-blue-500 flex-shrink-0">
-                            <Eye className="w-4 h-4" />
-                        </div>
-                        <div className="flex-1 mt-1">
-                            <div className="flex justify-between">
-                                <h4 className="text-xs font-bold text-slate-900">Profile viewed by TechFlow Inc.</h4>
-                                <span className="text-[10px] font-medium text-slate-400">1d ago</span>
-                            </div>
-                            <p className="text-[10px] text-slate-500 mt-0.5 font-medium">They viewed your profile</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-start gap-4 relative z-10">
-                        <div className="w-8 h-8 rounded-full bg-amber-50 border-4 border-white flex items-center justify-center text-amber-500 flex-shrink-0">
-                            <Bookmark className="w-4 h-4" />
-                        </div>
-                        <div className="flex-1 mt-1">
-                            <div className="flex justify-between">
-                                <h4 className="text-xs font-bold text-slate-900">You saved a job</h4>
-                                <span className="text-[10px] font-medium text-slate-400">1d ago</span>
-                            </div>
-                            <p className="text-[10px] text-slate-500 mt-0.5 font-medium">Frontend Developer Intern at Microsoft</p>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div className="mt-6 text-center">
-                    <button className="text-xs font-bold text-[#5B4EEF] hover:text-indigo-700 flex items-center justify-center gap-1 mx-auto">
-                        View all activity <ArrowRight className="w-3 h-3" />
-                    </button>
-                </div>
-            </div>
+       
         </div>
     )
 }
