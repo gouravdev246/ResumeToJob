@@ -40,8 +40,12 @@ export const generateEmbedding = async (text) => {
       error.response?.data || error.message
     );
 
+    if (error?.status === 401) {
+      throw new Error("Nebius AI authentication failed (401 Unauthorized) during embedding. Please check or refresh your NEBIUS_API_KEY.");
+    }
+
     throw new Error(
-      "Failed to generate embedding"
+      error?.message || "Failed to generate embedding"
     );
   }
 };

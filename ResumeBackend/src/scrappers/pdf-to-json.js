@@ -19,6 +19,10 @@ import { RawPdfData } from '../models/rawpdf.model.js';
 
 export const extractResumeToJSON = async (filePath) => {
   try {
+    if (!process.env.NEBIUS_API_KEY) {
+      throw new Error("NEBIUS_API_KEY is not defined in environment variables. Please check your .env file or deployment settings.");
+    }
+
     const client = new OpenAI({
       baseURL: 'https://api.studio.nebius.ai/v1/',
       apiKey: process.env.NEBIUS_API_KEY,
@@ -73,6 +77,9 @@ export const extractResumeToJSON = async (filePath) => {
 
   } catch (error) {
     console.error("Extraction Pipeline Error:", error);
-    throw new Error("Failed to process resume via Nebius AI.");
+    if (error?.status === 401) {
+      throw new Error("Nebius AI authentication failed (401 Unauthorized). Please check or refresh your NEBIUS_API_KEY.");
+    }
+    throw new Error(error?.message || "Failed to process resume via Nebius AI.");
   }
 };

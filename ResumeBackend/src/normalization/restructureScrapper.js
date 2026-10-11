@@ -1,4 +1,3 @@
-// import { normalizeSkills } from "./normalizeSkiils.js";
 
 function normalizeTitle(title) {
   return title
