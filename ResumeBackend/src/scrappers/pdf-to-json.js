@@ -37,7 +37,7 @@ export const extractResumeToJSON = async (filePath) => {
 
     // 2. AI Parsing with Nebius
     const response = await client.chat.completions.create({
-      model: "meta-llama/Llama-3.3-70B-Instruct", // Replace with your preferred Nebius model ID
+      model: "openai/gpt-oss-120b", // Replace with your preferred Nebius model ID
       messages: [
         {
           role: "system",
@@ -79,6 +79,9 @@ export const extractResumeToJSON = async (filePath) => {
     console.error("Extraction Pipeline Error:", error);
     if (error?.status === 401) {
       throw new Error("Nebius AI authentication failed (401 Unauthorized). Please check or refresh your NEBIUS_API_KEY.");
+    }
+    if (error?.status === 403) {
+      throw new Error("Nebius AI permission denied (403 Forbidden). Ensure your NEBIUS_API_KEY is updated in your deployment environment variables and that your Nebius project has sufficient balance/quota.");
     }
     throw new Error(error?.message || "Failed to process resume via Nebius AI.");
   }
