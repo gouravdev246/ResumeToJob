@@ -1,64 +1,67 @@
 
 function normalizeTitle(title) {
+  if (!title || typeof title !== "string") {
+    return "Untitled Role";
+  }
   return title
     .replace(/internship/i, "Intern")
     .trim();
 }
 
+export async function normalizeInternshalaJob(job = {}) {
+  const safeJob = job || {};
 
-
-export async function normalizeInternshalaJob(job) {
   return {
-    id: job.listingId,
+    id: safeJob.listingId || safeJob.id || "",
 
     source: "Internshala",
 
-    title: normalizeTitle(job.title),
+    title: normalizeTitle(safeJob.title || safeJob.profile || safeJob.role || safeJob.jobTitle),
 
-    company: job.company,
+    company: safeJob.company || safeJob.companyName || "Unknown Company",
 
-    companyUrl: job.companyUrl || "",
+    companyUrl: safeJob.companyUrl || "",
 
     employmentType:
-      job.listingType === "internships"
+      safeJob.listingType === "internships"
         ? "Internship"
         : "Full-time",
 
-    category: job.category || "",
+    category: safeJob.category || "",
 
-    location: job.location,
+    location: safeJob.location || "Remote",
 
-    remote: job.isRemote || false,
+    remote: safeJob.isRemote || false,
 
     salary: {
-      min: job.stipendMin || 0,
-      max: job.stipendMax || 0,
+      min: safeJob.stipendMin || safeJob.salaryMin || 0,
+      max: safeJob.stipendMax || safeJob.salaryMax || 0,
       currency: "INR",
       period: "month"
     },
 
-    duration: job.duration || "",
+    duration: safeJob.duration || "",
 
-    skills: job.skills || [],
+    skills: Array.isArray(safeJob.skills) ? safeJob.skills : [],
 
-    description: job.description || "",
+    description: safeJob.description || "",
 
-    experienceLevel: "Beginer",
+    experienceLevel: safeJob.experienceLevel || "Beginner",
 
-    applyLink: job.url,
+    applyLink: safeJob.url || safeJob.applyLink || "",
 
     metadata: {
-      openings: job.openings || 0,
-      applicants: job.applicants || 0,
-      perks: job.perks || [],
-      hasJobOffer: job.hasJobOffer || false,
-      isPartTime: job.isPartTime || false
+      openings: safeJob.openings || 0,
+      applicants: safeJob.applicants || 0,
+      perks: safeJob.perks || [],
+      hasJobOffer: safeJob.hasJobOffer || false,
+      isPartTime: safeJob.isPartTime || false
     },
-    postedAt: job.postedAt || null,
+    postedAt: safeJob.postedAt || null,
 
-    scrapedAt: job.scrapedAt,
+    scrapedAt: safeJob.scrapedAt || new Date().toISOString(),
 
-    embeddings: [] ,
-    rank_score : job.rank || 0 
+    embeddings: [],
+    rank_score: safeJob.rank || 0
   };
 }

@@ -62,11 +62,18 @@ export const internshala = async (category)=>{
     };
     
     // Run the Actor and wait for it to finish
-    const run = await client.actor("TKhVyjHu2dHCYTaMg").call(input);
+    // Note: Actor TKhVyjHu2dHCYTaMg was an LEI company registry scraper; automation-lab/internshala-scraper is the dedicated Internshala scraper.
+    const actorId = "automation-lab/internshala-scraper";
+    const run = await client.actor(actorId).call({
+        searchQuery: mappedCategory,
+        searchMode: "internships",
+        maxResults: 5,
+        fetchDetails: false
+    });
     
     // Fetch and print Actor results from the run's dataset (if any)
     console.log('Results from dataset');
-    const { items } = await client.dataset(run.defaultDatasetId).listItems();
+    const { items = [] } = await client.dataset(run.defaultDatasetId).listItems();
     return items;
 }
 

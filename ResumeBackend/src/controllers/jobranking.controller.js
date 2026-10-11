@@ -56,7 +56,11 @@ const jobRanking = async (req , res) =>{
         
         return res.status(200).json({ message: "Done", newjob: newJobData });
     }catch(err){
-        console.log("Error in job Ranking " , err) ;
+        console.error("Error in job Ranking: ", err);
+        return res.status(500).json({ 
+            message: "Failed to rank and fetch jobs", 
+            error: err.message 
+        });
     }
 }
 
